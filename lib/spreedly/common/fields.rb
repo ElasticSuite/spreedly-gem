@@ -48,6 +48,8 @@ module Spreedly
           add_date_time_accessor(f)
         when :integer
           add_integer_accessor(f)
+        when :hash
+          add_hash_accessor(f)
         when nil
           attr_reader f
         else
@@ -75,8 +77,17 @@ module Spreedly
           instance_variable_get("@#{f}").to_i
         end
       end
-    end
 
+      def add_hash_accessor(f)
+        define_method(f) do
+          return nil unless instance_variable_get("@#{f}")
+          Nokogiri::XML::DocumentFragment.parse(instance_variable_get("@#{f}"))
+                                         .children
+                                         .select { |c| c.name != 'text' }
+                                         .each_with_object({}) { |key, metadata| metadata[key.name.to_sym] = key.children.first&.text&.freeze }.to_h.freeze
+        end
+      end
+    end
   end
 end
 

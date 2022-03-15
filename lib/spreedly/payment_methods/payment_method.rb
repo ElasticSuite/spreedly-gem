@@ -7,6 +7,7 @@ module Spreedly
     include ErrorsParser
 
     field :email, :storage_state, :data, :payment_method_type
+
     attr_reader :errors
 
     def initialize(xml_doc)

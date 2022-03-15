@@ -80,9 +80,20 @@ module Spreedly
       "#{base_url}/v1/payment_methods/#{payment_method_token}/transactions.xml#{param_string}"
     end
 
-    def list_payment_methods_url(since_token)
-      since_param = "?since_token=#{since_token}" if since_token
-      "#{base_url}/v1/payment_methods.xml#{since_param}"
+    def list_payment_methods_url(since_token, options = {})
+      options.each do |key, val|
+        options[key.to_sym] = val
+      end
+      
+      params = []
+      params << "since_token=#{since_token}" if since_token 
+      if options[:metadata]
+        options[:metadata].each_pair do |key, value|
+          params << "metadata[#{key}]=#{value}"
+        end
+      end
+      param_string = "?#{params.join('&')}" if params.any?
+      "#{base_url}/v1/payment_methods.xml#{param_string}"
     end
 
     def list_gateways_url(since_token)
