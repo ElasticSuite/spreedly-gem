@@ -276,6 +276,7 @@ module Spreedly
 
     def update_credit_card_body(options)
       build_xml_request('payment_method') do |doc|
+        add_metadata(doc, options)
         add_to_doc(doc, options, :email, :month, :full_name, :first_name, :last_name, :year,
                    :address1, :address2, :city, :state, :zip, :country, :phone_number,
                    :eligible_for_card_updater)
@@ -312,6 +313,11 @@ module Spreedly
     def add_gateway_specific_fields(doc, options)
       return unless options[:gateway_specific_fields].kind_of?(Hash)
       doc << "<gateway_specific_fields>#{xml_for_hash(options[:gateway_specific_fields])}</gateway_specific_fields>"
+    end
+
+    def add_metadata(doc, options)
+      return unless options[:metadata].kind_of?(Hash)
+      doc << "<metadata>#{xml_for_hash(options[:metadata])}</metadata>"
     end
 
     def add_shipping_address_override(doc, options)
