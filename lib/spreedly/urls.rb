@@ -86,7 +86,10 @@ module Spreedly
       end
       
       params = []
-      params << "since_token=#{since_token}" if since_token 
+      params << "since_token=#{since_token}" if since_token
+      params << "count=#{options[:count]}" if options[:count]
+      params << "order=#{options[:order]}" if options[:order]
+      params << "state=#{options[:state]}" if options[:state]      
       if options[:metadata]
         options[:metadata].each_pair do |key, value|
           params << "metadata[#{key}]=#{value}"
